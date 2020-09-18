@@ -84,7 +84,7 @@ class navigator:
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "movies&url=%s&page=%d" % (url, int(page)+1), '', 'DefaultFolder.png')
-        finally:
+        except:
             pass
         self.endDirectory('movies')
 
@@ -108,7 +108,7 @@ class navigator:
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "movies&url=%s&page=%d" % (url, int(page)+1), '', 'DefaultFolder.png')
-        finally:
+        except:
             pass
         self.endDirectory('movies')
 
@@ -172,7 +172,7 @@ class navigator:
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "historysearch&search=%s&page=%d" % (search_text, int(page)+1), '', 'DefaultFolder.png')
-        finally:
+        except:
             pass
         self.endDirectory('movies')
 
