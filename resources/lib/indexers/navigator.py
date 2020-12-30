@@ -149,8 +149,8 @@ class navigator:
             self.getResults(search_text, 1)
 
     def getResults(self, search_text, page):
-        url_content = client.request("%spage/%s/?s=%s" % (base_url, page, search_text))
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content csearch'})[0]
+        url_content = client.request("%spage/%s/?s=%s" % (base_url, page, urllib.quote_plus(search_text)))
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content rigth csearch'})[0]
         searchpage = client.parseDOM(url_content, 'div', attrs={'class': 'search-page'})[0]
         results = client.parseDOM(searchpage, 'div', attrs={'class': 'result-item'})
         for result in results:
