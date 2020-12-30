@@ -56,7 +56,7 @@ class navigator:
         self.endDirectory()
 
     def getGenreMovies(self, url_content, url, page):
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content'})
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right'})
         items = client.parseDOM(content, 'div', attrs={'class': 'items'})[0]
         articles = client.parseDOM(items, 'article', attrs={'class': 'item movies'})
         for article in articles:
@@ -89,7 +89,7 @@ class navigator:
         self.endDirectory('movies')
 
     def getQualityMovies(self, url_content, url, page):
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content'})
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right'})
         slider = client.parseDOM(content, 'div', attrs={'class': 'slider'})[0]
         articles = client.parseDOM(slider, 'article', attrs={'class': 'item'})
         for article in articles:
@@ -178,7 +178,7 @@ class navigator:
 
     def getSources(self, url):
         url_content = client.request(url)
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content'})[0]
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right'})[0]
         sheader = client.parseDOM(content, 'div', attrs={'class': 'sheader'})[0]
         poster = client.parseDOM(sheader, 'div', attrs={'class': 'poster'})[0]
         thumb = client.parseDOM(poster, 'img', ret='src')[0]
@@ -215,7 +215,8 @@ class navigator:
     def playmovie(self, mtype, post, nume):
         cookies = client.request(base_url, output='cookie')
         url_content = client.request(ajax_url, post="action=doo_player_ajax&post=%s&nume=%s&type=%s" % (post, nume, mtype), cookie=cookies)
-        url = client.parseDOM(url_content, 'iframe', ret='src')[0]
+        url = json.loads(url_content)['embed_url']
+        #url = client.parseDOM(url_content, 'iframe', ret='src')[0]
         xbmc.log('onlinefilmekingyen: resolving url: %s' % url, xbmc.LOGNOTICE)
         try:
             direct_url = urlresolver.resolve(url)
