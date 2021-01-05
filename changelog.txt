@@ -1,4 +1,6 @@
-﻿[B]1.0.2[/B]
+﻿[B]1.0.3[/B]
+- Forrás változás követése
+[B]1.0.2[/B]
 - Keresés javítása
 [B]1.0.1[/B]
 - Forrás változás követése

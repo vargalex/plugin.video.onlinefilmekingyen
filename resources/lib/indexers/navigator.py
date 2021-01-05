@@ -80,7 +80,7 @@ class navigator:
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
-            matches = re.search(r'^Page ([0-9]*) of ([0-9]*)$', span, re.S)
+            matches = re.search(r'^Oldal ([0-9]*) of ([0-9]*)$', span, re.S)
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "movies&url=%s&page=%d" % (url, int(page)+1), '', 'DefaultFolder.png')
@@ -104,7 +104,7 @@ class navigator:
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
-            matches = re.search(r'^Page ([0-9]*) of ([0-9]*)$', span, re.S)
+            matches = re.search(r'^Oldal ([0-9]*) of ([0-9]*)$', span, re.S)
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "movies&url=%s&page=%d" % (url, int(page)+1), '', 'DefaultFolder.png')
@@ -168,7 +168,7 @@ class navigator:
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
-            matches = re.search(r'^Page ([0-9]*) of ([0-9]*)$', span, re.S)
+            matches = re.search(r'^Oldal ([0-9]*) of ([0-9]*)$', span, re.S)
             if matches != None:
                 if int(matches.group(2))>int(page):
                     self.addDirectoryItem(u'[I]K\u00F6vetkez\u0151 oldal (%d/%s)  >>[/I]' % (int(page)+1, matches.group(2)), "historysearch&search=%s&page=%d" % (search_text, int(page)+1), '', 'DefaultFolder.png')
