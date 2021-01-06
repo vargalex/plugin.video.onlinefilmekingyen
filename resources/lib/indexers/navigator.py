@@ -195,10 +195,12 @@ class navigator:
         duration = 0
         if matches != None:
             duration = int(matches.group(1))*60
-        info = client.parseDOM(content, 'div', attrs={'id': 'info'})[0]
-        description = client.parseDOM(info, 'div', attrs={'itemprop': 'description'})[0]
-        plot=client.parseDOM(description, 'p')[0].encode('utf-8')
-
+        try:            
+            info = client.parseDOM(content, 'div', attrs={'id': 'info'})[0]
+            description = client.parseDOM(info, 'div', attrs={'itemprop': 'description'})[0]
+            plot=client.parseDOM(description, 'p')[0].encode('utf-8')
+        except:
+            plot=""
         playeroptions = client.parseDOM(content, 'ul', attrs={'id': 'playeroptionsul'})[0]
         lis = client.parseDOM(playeroptions, 'li')
         sourceCnt = 0

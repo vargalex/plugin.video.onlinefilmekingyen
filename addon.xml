@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.onlinefilmekingyen" name="Onlinefilmekingyen" version="1.0.3" provider-name="vargalex">
+<addon id="plugin.video.onlinefilmekingyen" name="Onlinefilmekingyen" version="1.0.4" provider-name="vargalex">
 	<requires>
 		<import addon="xbmc.python" version="2.24.0"/>
 		<import addon="script.module.resolveurl" version="5.0.0"/>
@@ -13,7 +13,7 @@
 		<description lang="en">Nézd meg a filmeket a https://www.onlinefilmekingyen.com/ oldalról!</description>
 		<language>hu</language>
 		<platform>all</platform>
-		<news>- Forrás változás követése
+		<news>- Hiányzó leírás nem okoz hibát
 		</news>
 		<assets>
 		  <icon>icon.png</icon>
