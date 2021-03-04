@@ -17,18 +17,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-
-
-import os,sys,re,xbmc,xbmcgui,xbmcplugin,xbmcaddon,urllib,urlparse,base64,time, locale, json
-#import resolveurl as urlresolver
+import os,sys,re,xbmc,xbmcgui,xbmcplugin,xbmcaddon, time, locale, json
 import urlresolver
 from resources.lib.modules import client
+from resources.lib.modules.utils import py2_encode
+
+if sys.version_info[0] == 3:
+    import urllib.parse as urlparse
+    from urllib.parse import quote_plus
+else:
+    import urlparse
+    from urllib import quote_plus
+
 
 sysaddon = sys.argv[0] ; syshandle = int(sys.argv[1])
 addonFanart = xbmcaddon.Addon().getAddonInfo('fanart')
 
-base_url = 'aHR0cHM6Ly93d3cub25saW5lZmlsbWVraW5neWVuLmNvbS8='.decode('base64')
-ajax_url = base_url + "d3AtYWRtaW4vYWRtaW4tYWpheC5waHA=".decode('base64')
+base_url = 'https://www.onlinefilmekingyen.com/'
+ajax_url = base_url + "wp-admin/admin-ajax.php"
 
 class navigator:
     def __init__(self):
@@ -68,15 +74,15 @@ class navigator:
             info = client.parseDOM(article, 'div')[2]
             info = client.parseDOM(article, 'div', attrs={'class': 'animation-1 dtinfo'})[0]
             title = client.parseDOM(info, 'div',attrs={'class': 'title'})[0]
-            title = client.replaceHTMLCodes(client.parseDOM(title, 'h4')[0]).encode('utf-8')
+            title = py2_encode(client.replaceHTMLCodes(client.parseDOM(title, 'h4')[0]))
             meta = client.parseDOM(info, 'div', attrs={'class': 'metadata'})[0]
-            year = client.parseDOM(meta, 'span')[0].encode('utf-8')
+            year = py2_encode(client.parseDOM(meta, 'span')[0])
             duration = "0"
             matches = re.search(r'^(.*)<span>([0-9]*) min</span>(.*)$', meta, re.S)
             if matches != None:
                 duration = matches.group(2)
-            plot = client.parseDOM(info, 'div', attrs={'class': 'texto'})[0].encode('utf-8')
-            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % urllib.quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'duration': int(duration)*60, 'fanart': thumb, 'plot': plot})
+            plot = py2_encode(client.parseDOM(info, 'div', attrs={'class': 'texto'})[0])
+            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'duration': int(duration)*60, 'fanart': thumb, 'plot': plot})
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
@@ -100,7 +106,7 @@ class navigator:
             data = client.parseDOM(article, 'div', attrs={'class': 'data'})[0]
             title = client.replaceHTMLCodes(client.parseDOM(data, 'h3', attrs={'class': 'title'})[0])
             year = client.parseDOM(data, 'span')[0]
-            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % urllib.quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb})
+            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb})
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
@@ -127,7 +133,7 @@ class navigator:
             items.sort(cmp=locale.strcoll)
             file.close()
             for item in items:
-                self.addDirectoryItem(item, 'historysearch&search=%s&page=1' % (urllib.quote_plus(item)), '', 'DefaultFolder.png')
+                self.addDirectoryItem(item, 'historysearch&search=%s&page=1' % (quote_plus(item)), '', 'DefaultFolder.png')
             if len(items) > 0:
                 self.addDirectoryItem('Keresési előzmények törlése', 'deletesearchhistory', '', 'DefaultFolder.png') 
         except:
@@ -149,7 +155,7 @@ class navigator:
             self.getResults(search_text, 1)
 
     def getResults(self, search_text, page):
-        url_content = client.request("%spage/%s/?s=%s" % (base_url, page, urllib.quote_plus(search_text)))
+        url_content = client.request("%spage/%s/?s=%s" % (base_url, page, quote_plus(search_text)))
         content = client.parseDOM(url_content, 'div', attrs={'class': 'content rigth csearch'})[0]
         searchpage = client.parseDOM(url_content, 'div', attrs={'class': 'search-page'})[0]
         results = client.parseDOM(searchpage, 'div', attrs={'class': 'result-item'})
@@ -159,12 +165,12 @@ class navigator:
             details = client.parseDOM(result, 'div', attrs={'class': 'details'})[0]
             titlediv = client.parseDOM(details, 'div', attrs={'class': 'title'})[0]
             movieurl = client.parseDOM(titlediv, 'a', ret='href')[0]
-            title = client.replaceHTMLCodes(client.parseDOM(titlediv, 'a')[0]).encode('utf-8')
+            title = py2_encode(client.replaceHTMLCodes(client.parseDOM(titlediv, 'a')[0]))
             meta = client.parseDOM(details, 'div', attrs={'class': 'meta'})[0]
-            year = client.parseDOM(meta, 'span', attrs={'class': 'year'})[0].encode('utf-8')
+            year = py2_encode(client.parseDOM(meta, 'span', attrs={'class': 'year'})[0])
             contenido = client.parseDOM(details, 'div', attrs={'class': 'contenido'})
-            plot = client.parseDOM(contenido, 'p')[0].encode('utf-8')
-            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % urllib.quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb, 'plot': plot})
+            plot = py2_encode(client.parseDOM(contenido, 'p')[0])
+            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb, 'plot': plot})
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
@@ -183,7 +189,7 @@ class navigator:
         poster = client.parseDOM(sheader, 'div', attrs={'class': 'poster'})[0]
         thumb = client.parseDOM(poster, 'img', ret='src')[0]
         data = client.parseDOM(sheader, 'div', attrs={'class': 'data'})[0]
-        title = client.parseDOM(data, 'h1')[0].encode('utf-8')
+        title = py2_encode(client.parseDOM(data, 'h1')[0])
         extra = client.parseDOM(data, 'div', attrs={'class': 'extra'})[0]
         date = client.parseDOM(extra, 'span', attrs={'class': 'date'})[0]
         runtime = client.parseDOM(extra, 'span', attrs={'class': 'runtime'})[0]
@@ -198,7 +204,7 @@ class navigator:
         try:            
             info = client.parseDOM(content, 'div', attrs={'id': 'info'})[0]
             description = client.parseDOM(info, 'div', attrs={'itemprop': 'description'})[0]
-            plot=client.parseDOM(description, 'p')[0].encode('utf-8')
+            plot=py2_encode(client.parseDOM(description, 'p')[0])
         except:
             plot=""
         playeroptions = client.parseDOM(content, 'ul', attrs={'id': 'playeroptionsul'})[0]
@@ -209,9 +215,9 @@ class navigator:
             type = client.parseDOM(playeroptions, 'li', ret='data-type')[sourceCnt-1]
             post = client.parseDOM(playeroptions, 'li', ret='data-post')[sourceCnt-1]
             nume = client.parseDOM(playeroptions, 'li', ret='data-nume')[sourceCnt-1]
-            quality = client.parseDOM(li, 'span', attrs={'class': 'title'})[0].encode('utf-8')
-            server = client.parseDOM(li, 'span', attrs={'class': 'server'})[0].encode('utf-8')
-            self.addDirectoryItem('%s | %s | [B]%s[/B]' % (format(sourceCnt, '02'), quality, server), 'playmovie&type=%s&post=%s&nume=%s' % (urllib.quote_plus(type), urllib.quote_plus(post), urllib.quote_plus(nume)), thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'plot': plot, 'duration': int(duration)*60})
+            quality = py2_encode(client.parseDOM(li, 'span', attrs={'class': 'title'})[0])
+            server = py2_encode(client.parseDOM(li, 'span', attrs={'class': 'server'})[0])
+            self.addDirectoryItem('%s | %s | [B]%s[/B]' % (format(sourceCnt, '02'), quality, server), 'playmovie&type=%s&post=%s&nume=%s' % (quote_plus(type), quote_plus(post), quote_plus(nume)), thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'plot': plot, 'duration': int(duration)*60})
         self.endDirectory('movies')
 
     def playmovie(self, mtype, post, nume):
@@ -219,18 +225,18 @@ class navigator:
         url_content = client.request(ajax_url, post="action=doo_player_ajax&post=%s&nume=%s&type=%s" % (post, nume, mtype), cookie=cookies)
         url = json.loads(url_content)['embed_url']
         #url = client.parseDOM(url_content, 'iframe', ret='src')[0]
-        xbmc.log('onlinefilmekingyen: resolving url: %s' % url, xbmc.LOGNOTICE)
+        xbmc.log('onlinefilmekingyen: resolving url: %s' % url, xbmc.LOGINFO)
         try:
             direct_url = urlresolver.resolve(url)
             if direct_url:
-                direct_url = direct_url.encode('utf-8')
+                direct_url = py2_encode(direct_url)
             else:
                 direct_url = url
         except Exception as e:
-            xbmcgui.Dialog().notification(urlparse.urlparse(url).hostname, e.message)
+            xbmcgui.Dialog().notification(urlparse.urlparse(url).hostname, str(e))
             return
         if direct_url:
-            xbmc.log('onlinefilmekingyen: playing URL: %s' % direct_url, xbmc.LOGNOTICE)
+            xbmc.log('onlinefilmekingyen: playing URL: %s' % direct_url, xbmc.LOGINFO)
             play_item = xbmcgui.ListItem(path=direct_url)
             xbmcplugin.setResolvedUrl(syshandle, True, listitem=play_item)
 
@@ -239,7 +245,7 @@ class navigator:
         if thumb == '': thumb = icon
         cm = []
         if queue == True: cm.append((queueMenu, 'RunPlugin(%s?action=queueItem)' % sysaddon))
-        if not context == None: cm.append((context[0].encode('utf-8'), 'RunPlugin(%s?action=%s)' % (sysaddon, context[1])))
+        if not context == None: cm.append((py2_encode(context[0]), 'RunPlugin(%s?action=%s)' % (sysaddon, context[1])))
         item = xbmcgui.ListItem(label=name)
         item.addContextMenuItems(cm)
         item.setArt({'icon': thumb, 'thumb': thumb, 'poster': thumb, 'banner': banner})
