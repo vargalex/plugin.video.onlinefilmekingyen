@@ -222,7 +222,6 @@ class navigator:
 
     def playmovie(self, mtype, post, nume):
         cookies = client.request(base_url, output='cookie')
-        xbmcgui.Dialog().ok("a", cookies)
         url_content = client.request(ajax_url, post="action=doo_player_ajax&post=%s&nume=%s&type=%s" % (post, nume, mtype), cookie=cookies)
         url = json.loads(url_content)['embed_url']
         #url = client.parseDOM(url_content, 'iframe', ret='src')[0]
