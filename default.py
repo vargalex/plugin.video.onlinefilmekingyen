@@ -61,6 +61,9 @@ elif action == 'movie':
 elif action == 'playmovie':
     navigator.navigator().playmovie(mtype, post, nume)
 
+elif action == 'playtablemovie':
+    navigator.navigator().playTableMovie(url)
+
 elif action == 'search':
     navigator.navigator().getSearches()
 

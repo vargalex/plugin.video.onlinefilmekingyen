@@ -35,11 +35,12 @@ addonFanart = xbmcaddon.Addon().getAddonInfo('fanart')
 
 base_url = 'https://www.onlinefilmekingyen.com/'
 ajax_url = base_url + "wp-admin/admin-ajax.php"
+deleteFromPlot = "Online film ,Online mozi "
 
 class navigator:
     def __init__(self):
         try:
-            locale.setlocale(locale.LC_ALL, "")
+            locale.setlocale(locale.LC_ALL, "hu_HU.UTF-8")
         except:
             pass
         self.base_path = py2_decode(xbmc.translatePath(xbmcaddon.Addon().getAddonInfo('profile')))
@@ -62,8 +63,8 @@ class navigator:
         self.endDirectory()
 
     def getGenreMovies(self, url_content, url, page):
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right'})
-        items = client.parseDOM(content, 'div', attrs={'class': 'items'})[0]
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right full'})
+        items = client.parseDOM(content, 'div', attrs={'class': 'items full'})[0]
         articles = client.parseDOM(items, 'article', attrs={'class': 'item movies'})
         for article in articles:
             poster = client.parseDOM(article, 'div', attrs={'class': 'poster'})[0]
@@ -71,18 +72,22 @@ class navigator:
             data = client.parseDOM(article, 'div', attrs={'class': 'data'})[0]
             h3 = client.parseDOM(data, 'h3')
             movieurl = client.parseDOM(h3, 'a', ret='href')[0]
-            info = client.parseDOM(article, 'div')[2]
-            info = client.parseDOM(article, 'div', attrs={'class': 'animation-1 dtinfo'})[0]
-            title = client.parseDOM(info, 'div',attrs={'class': 'title'})[0]
-            title = py2_encode(client.replaceHTMLCodes(client.parseDOM(title, 'h4')[0]))
-            meta = client.parseDOM(info, 'div', attrs={'class': 'metadata'})[0]
-            year = py2_encode(client.parseDOM(meta, 'span')[0])
-            duration = "0"
-            matches = re.search(r'^(.*)<span>([0-9]*) min</span>(.*)$', meta, re.S)
-            if matches != None:
-                duration = matches.group(2)
-            plot = py2_encode(client.parseDOM(info, 'div', attrs={'class': 'texto'})[0])
-            self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'duration': int(duration)*60, 'fanart': thumb, 'plot': plot})
+            title = client.replaceHTMLCodes(client.parseDOM(h3, 'a')[0])
+            datum = client.parseDOM(data, 'span')[0]
+            quality = client.parseDOM(poster, 'span', attrs={'class': 'quality'})[0]
+            #info = client.parseDOM(article, 'div')[2]
+            #info = client.parseDOM(article, 'div', attrs={'class': 'animation-1 dtinfo'})[0]
+            #title = client.parseDOM(info, 'div',attrs={'class': 'title'})[0]
+            #title = py2_encode(client.replaceHTMLCodes(client.parseDOM(title, 'h4')[0]))
+            #meta = client.parseDOM(info, 'div', attrs={'class': 'metadata'})[0]
+            #year = py2_encode(client.parseDOM(meta, 'span')[0])
+            #duration = "0"
+            #matches = re.search(r'^(.*)<span>([0-9]*) min</span>(.*)$', meta, re.S)
+            #if matches != None:
+            #    duration = matches.group(2)
+            #plot = py2_encode(client.parseDOM(info, 'div', attrs={'class': 'texto'})[0])
+            #self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'duration': int(duration)*60, 'fanart': thumb, 'plot': plot})
+            self.addDirectoryItem('%s (%s) [COLOR yellow]%s[/COLOR]' % (title, datum, quality), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.npg', meta={'title': title, 'fanart': thumb}) 
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
             span = client.parseDOM(pagination, 'span')[0]
@@ -95,8 +100,8 @@ class navigator:
         self.endDirectory('movies')
 
     def getQualityMovies(self, url_content, url, page):
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right'})
-        slider = client.parseDOM(content, 'div', attrs={'class': 'slider'})[0]
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right full'})
+        slider = client.parseDOM(content, 'div', attrs={'class': 'slider full'})[0]
         articles = client.parseDOM(slider, 'article', attrs={'class': 'item'})
         for article in articles:
             image = client.parseDOM(article, 'div', attrs={'class': 'image'})[0]
@@ -174,7 +179,7 @@ class navigator:
             meta = client.parseDOM(details, 'div', attrs={'class': 'meta'})[0]
             year = py2_encode(client.parseDOM(meta, 'span', attrs={'class': 'year'})[0])
             contenido = client.parseDOM(details, 'div', attrs={'class': 'contenido'})
-            plot = py2_encode(client.parseDOM(contenido, 'p')[0])
+            plot = py2_encode(client.parseDOM(contenido, 'p')[0]).replace(deleteFromPlot, "")
             self.addDirectoryItem('%s (%s)' % (title, year), 'movie&url=%s' % quote_plus(movieurl), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb, 'plot': plot})
         try:
             pagination = client.parseDOM(content, 'div', attrs={'class': 'pagination'})[0]
@@ -209,7 +214,7 @@ class navigator:
         try:            
             info = client.parseDOM(content, 'div', attrs={'id': 'info'})[0]
             description = client.parseDOM(info, 'div', attrs={'itemprop': 'description'})[0]
-            plot=py2_encode(client.parseDOM(description, 'p')[0])
+            plot=py2_encode(client.parseDOM(description, 'em')[0]).replace(deleteFromPlot, "")
         except:
             plot=""
         playeroptions = client.parseDOM(content, 'ul', attrs={'id': 'playeroptionsul'})[0]
@@ -222,14 +227,24 @@ class navigator:
             nume = client.parseDOM(playeroptions, 'li', ret='data-nume')[sourceCnt-1]
             quality = py2_encode(client.parseDOM(li, 'span', attrs={'class': 'title'})[0])
             server = py2_encode(client.parseDOM(li, 'span', attrs={'class': 'server'})[0])
-            self.addDirectoryItem('%s | %s | [B]%s[/B]' % (format(sourceCnt, '02'), quality, server), 'playmovie&type=%s&post=%s&nume=%s' % (quote_plus(type), quote_plus(post), quote_plus(nume)), thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'plot': plot, 'duration': int(duration)*60})
+            self.addDirectoryItem('%s | %s | [B]%s[/B]' % (format(sourceCnt, '02'), quality, server), 'playmovie&type=%s&post=%s&nume=%s' % (quote_plus(type), quote_plus(post), quote_plus(nume)), thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'plot': plot, 'duration': int(duration)})
+        try:
+            linkstable = client.parseDOM(content, 'div', attrs={'class': 'links_table'})[0]
+            tbody = client.parseDOM(linkstable, 'tbody')[0]
+            trs = client.parseDOM(tbody, 'tr')
+            for tr in trs:
+                sourceCnt+=1
+                td0 = client.parseDOM(tr, 'td')[0]
+                server = urlparse.parse_qs(urlparse.urlparse(client.parseDOM(td0, 'img', ret='src')[0]).query)['domain'][0]
+                quality = py2_encode(client.parseDOM(tr, 'strong', attrs={'class': 'quality'})[0])
+                url = client.parseDOM(td0, 'a', ret='href')[0]
+                lang = "[COLOR yellow]%s[/COLOR]" % client.parseDOM(tr, 'td')[2]
+                self.addDirectoryItem('%s | %s | [B]%s[/B] %s' % (format(sourceCnt, '02'), quality, server, lang), 'playtablemovie&url=%s' % url, thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'plot': plot, 'duration': int(duration)})
+        except:
+            pass
         self.endDirectory('movies')
 
-    def playmovie(self, mtype, post, nume):
-        cookies = client.request(base_url, output='cookie')
-        url_content = client.request(ajax_url, post="action=doo_player_ajax&post=%s&nume=%s&type=%s" % (post, nume, mtype), cookie=cookies)
-        url = json.loads(url_content)['embed_url']
-        #url = client.parseDOM(url_content, 'iframe', ret='src')[0]
+    def resolveURL(self, url):
         xbmc.log('onlinefilmekingyen: resolving url: %s' % url, xbmc.LOGINFO)
         try:
             direct_url = urlresolver.resolve(url)
@@ -244,6 +259,21 @@ class navigator:
             xbmc.log('onlinefilmekingyen: playing URL: %s' % direct_url, xbmc.LOGINFO)
             play_item = xbmcgui.ListItem(path=direct_url)
             xbmcplugin.setResolvedUrl(syshandle, True, listitem=play_item)
+
+    def playmovie(self, mtype, post, nume):
+        cookies = client.request(base_url, output='cookie')
+        url_content = client.request(ajax_url, post="action=doo_player_ajax&post=%s&nume=%s&type=%s" % (post, nume, mtype), cookie=cookies)
+        url = json.loads(url_content)['embed_url']
+        if 'youtube' in url:
+            u = urlparse.urlparse(url)
+            url = "%s://%s%s" % (u.scheme, u.netloc, u.path)
+        #url = client.parseDOM(url_content, 'iframe', ret='src')[0]
+        self.resolveURL(url)
+
+    def playTableMovie(self, url):
+        url_content = client.request(url)
+        src = client.parseDOM(url_content, 'a', attrs={'id': 'link'}, ret='href')[0]
+        self.resolveURL(src)
 
     def addDirectoryItem(self, name, query, thumb, icon, context=None, queue=False, isAction=True, isFolder=True, Fanart=None, meta=None, banner=None):
         url = '%s?action=%s' % (sysaddon, query) if isAction == True else query
