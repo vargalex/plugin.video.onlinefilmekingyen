@@ -64,7 +64,6 @@ class navigator:
         self.endDirectory()
 
     def getYears(self):
-        xbmcgui.Dialog().ok("a", "itt")
         url_content=client.request(base_url)
         ulYears = client.parseDOM(url_content, 'ul', attrs={'class': 'releases falsescroll'})[0]
         lis = client.parseDOM(ulYears, 'li')
