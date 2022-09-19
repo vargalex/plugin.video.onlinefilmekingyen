@@ -50,6 +50,7 @@ class navigator:
         self.addDirectoryItem('Keresés', 'search', '', 'DefaultFolder.png')
         self.addDirectoryItem('Műfajok', 'submenu&url=1989', '', 'DefaultFolder.png')
         self.addDirectoryItem('Minőség', 'submenu&url=2302', '', 'DefaultFolder.png')
+        self.addDirectoryItem('Megjelenés éve', 'years', '', 'DefaultFolder.png')
         self.endDirectory()
     
     def getSubMenuItems(self, id):
@@ -62,9 +63,20 @@ class navigator:
             self.addDirectoryItem(caption, 'movies&url=%s&page=1' % url, '', 'DefaultFolder.png')
         self.endDirectory()
 
+    def getYears(self):
+        xbmcgui.Dialog().ok("a", "itt")
+        url_content=client.request(base_url)
+        ulYears = client.parseDOM(url_content, 'ul', attrs={'class': 'releases falsescroll'})[0]
+        lis = client.parseDOM(ulYears, 'li')
+        for li in lis:
+            caption = client.parseDOM(li, 'a')[0]
+            url = client.parseDOM(li, 'a', ret='href')[0]
+            self.addDirectoryItem(caption, 'movies&url=%s&page=1' % url, '', 'DefaultFolder.png')
+        self.endDirectory()
+
     def getGenreMovies(self, url_content, url, page):
-        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right full'})
-        items = client.parseDOM(content, 'div', attrs={'class': 'items full'})[0]
+        content = client.parseDOM(url_content, 'div', attrs={'class': 'content right.*?'})
+        items = client.parseDOM(content, 'div', attrs={'class': 'items.*?'})[0]
         articles = client.parseDOM(items, 'article', attrs={'class': 'item movies'})
         for article in articles:
             poster = client.parseDOM(article, 'div', attrs={'class': 'poster'})[0]
@@ -125,10 +137,10 @@ class navigator:
 
     def getMovies(self, url, page):
         url_content = client.request("%spage/%s/" % (url, page))
-        if '/tag/' in url or '/genre/' in url:
-            self.getGenreMovies(url_content, url, page)
-        else:
+        if '/quality/' in url:
             self.getQualityMovies(url_content, url, page)
+        else:
+            self.getGenreMovies(url_content, url, page)
 
     def getSearches(self):
         self.addDirectoryItem('Új keresés', 'newsearch', '', 'DefaultFolder.png')
