@@ -1,4 +1,6 @@
-﻿[B]1.0.11[/B]
+﻿[B]1.0.13[/B]
+- Minőség nincs mindenhol kitöltve
+[B]1.0.11[/B]
 - Feliratos kategória javítása
 - Megjelenés éve szerinti csoportosítás
 [B]1.0.10[/B]

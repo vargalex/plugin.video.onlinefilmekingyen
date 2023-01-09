@@ -85,7 +85,10 @@ class navigator:
             movieurl = client.parseDOM(h3, 'a', ret='href')[0]
             title = client.replaceHTMLCodes(client.parseDOM(h3, 'a')[0])
             datum = client.parseDOM(data, 'span')[0]
-            quality = client.parseDOM(poster, 'span', attrs={'class': 'quality'})[0]
+            try:
+                quality = client.parseDOM(poster, 'span', attrs={'class': 'quality'})[0]
+            except:
+                quality = "unknown"
             #info = client.parseDOM(article, 'div')[2]
             #info = client.parseDOM(article, 'div', attrs={'class': 'animation-1 dtinfo'})[0]
             #title = client.parseDOM(info, 'div',attrs={'class': 'title'})[0]
