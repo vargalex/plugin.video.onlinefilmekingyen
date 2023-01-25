@@ -17,9 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,sys,re,xbmc,xbmcgui,xbmcplugin,xbmcaddon, time, locale, json
+import os,sys,re,xbmc,xbmcgui,xbmcplugin, time, locale, json
 import resolveurl as urlresolver
-from resources.lib.modules import client
+from resources.lib.modules import client, control
 from resources.lib.modules.utils import py2_encode, py2_decode
 
 if sys.version_info[0] == 3:
@@ -29,9 +29,8 @@ else:
     import urlparse
     from urllib import quote_plus
 
-
 sysaddon = sys.argv[0] ; syshandle = int(sys.argv[1])
-addonFanart = xbmcaddon.Addon().getAddonInfo('fanart')
+addonFanart = control.addonInfo('fanart')
 
 base_url = 'https://www.onlinefilmekingyen.com/'
 ajax_url = base_url + "wp-admin/admin-ajax.php"
@@ -43,7 +42,7 @@ class navigator:
             locale.setlocale(locale.LC_ALL, "hu_HU.UTF-8")
         except:
             pass
-        self.base_path = py2_decode(xbmc.translatePath(xbmcaddon.Addon().getAddonInfo('profile')))
+        self.base_path = py2_decode(control.transPath(control.addonInfo('profile')))
         self.searchFileName = os.path.join(self.base_path, "search.history")
 
     def getRoot(self):
