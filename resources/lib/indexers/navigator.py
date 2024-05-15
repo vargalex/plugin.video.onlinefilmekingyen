@@ -49,7 +49,7 @@ class navigator:
         self.addDirectoryItem('Keresés', 'search', '', 'DefaultFolder.png')
         self.addDirectoryItem('Műfajok', 'submenu&url=1989', '', 'DefaultFolder.png')
         self.addDirectoryItem('Minőség', 'submenu&url=2302', '', 'DefaultFolder.png')
-        self.addDirectoryItem('Megjelenés éve', 'years', '', 'DefaultFolder.png')
+        self.addDirectoryItem('Megjelenés éve', 'submenu&url=20554', '', 'DefaultFolder.png')
         self.endDirectory()
     
     def getSubMenuItems(self, id):
@@ -59,16 +59,8 @@ class navigator:
         for li in lis:
             caption = client.parseDOM(li, 'a')[0]
             url = client.parseDOM(li, 'a', ret='href')[0]
-            self.addDirectoryItem(caption, 'movies&url=%s&page=1' % url, '', 'DefaultFolder.png')
-        self.endDirectory()
-
-    def getYears(self):
-        url_content=client.request(base_url)
-        ulYears = client.parseDOM(url_content, 'ul', attrs={'class': 'releases falsescroll'})[0]
-        lis = client.parseDOM(ulYears, 'li')
-        for li in lis:
-            caption = client.parseDOM(li, 'a')[0]
-            url = client.parseDOM(li, 'a', ret='href')[0]
+            if not url.startswith("http"):
+                url = "%s%s" % (base_url, url)
             self.addDirectoryItem(caption, 'movies&url=%s&page=1' % url, '', 'DefaultFolder.png')
         self.endDirectory()
 

@@ -52,9 +52,6 @@ if action == None:
 if action == 'submenu':
     navigator.navigator().getSubMenuItems(url)
 
-if action == 'years':
-    navigator.navigator().getYears()
-
 elif action == 'movies':
     navigator.navigator().getMovies(url, page)
 
