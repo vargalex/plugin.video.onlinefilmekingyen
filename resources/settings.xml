@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Beállítások">
+        <setting label="Weboldal címe" type="text" id="onlinefilmekingyen_base" default="https://www.onlinefilmekingyen1.com/"/>
+        <setting label="Felirat letöltésének kísérlete" type="bool" id="downloadsubtitles" default="True"/>
+        <setting id="firstopen" visible="false" default="true"/>
+    </category>
+</settings>

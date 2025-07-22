@@ -1,4 +1,9 @@
-﻿[B]1.0.15[/B]
+﻿[B]1.0.16[/B]
+- Forrás változás követése
+- sorozatok támogatása
+- felirat letöltése (kapcsolható)
+- apró javítások
+[B]1.0.15[/B]
 - Évszám szerinti listázás javítása
 [B]1.0.14[/B]
 - Nexus kompatibilitás

@@ -44,6 +44,8 @@ post = params.get('post')
 
 nume = params.get('nume')
 
+season = params.get('season')
+
 duration = 0 if params.get('duration') == None else params.get('duration') 
 
 if action == None:
@@ -56,7 +58,7 @@ elif action == 'movies':
     navigator.navigator().getMovies(url, page)
 
 elif action == 'movie':
-    navigator.navigator().getSources(url)
+    navigator.navigator().getSources(url, season)
 
 elif action == 'playmovie':
     navigator.navigator().playmovie(mtype, post, nume)
@@ -75,4 +77,7 @@ elif action == 'newsearch':
 
 elif action == 'deletesearchhistory':
     navigator.navigator().deleteSearchHistory()
+
+elif action == 'playdirecturl':
+    navigator.navigator().playdirecturl(url)
 
