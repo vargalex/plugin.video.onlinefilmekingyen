@@ -276,7 +276,7 @@ class navigator:
                             episodeCnt = len(seasons[season]["episodes"])
                         else:
                             episodeCnt = len(seasons[season])
-                        self.addDirectoryItem("%s. évad (%d epizód)" % (season, episodeCnt), 'movie&url=%s&season=%s' % (quote_plus(url), season), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb, 'plot': plot})
+                        self.addDirectoryItem("%s. évad (%d epizód)" % (py2_encode(season), episodeCnt), 'movie&url=%s&season=%s' % (quote_plus(url), season), thumb, 'DefaultMovies.png', meta={'title': title, 'fanart': thumb, 'plot': plot})
                 else:
                     episodes = None
                     if "episodes" in seasons[season]:
@@ -284,7 +284,7 @@ class navigator:
                     else:
                         episodes = seasons[season]
                     for episode in episodes:
-                        self.addDirectoryItem("%s. évad %s. epizód" % (season, episode), 'playdirecturl&url=%s' % episodes[episode], thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'fanart': thumb, 'plot': plot})
+                        self.addDirectoryItem("%s. évad %s. epizód" % (py2_encode(season), py2_encode(episode)), 'playdirecturl&url=%s' % episodes[episode], thumb, 'DefaultMovies.png', isFolder=False, meta={'title': title, 'fanart': thumb, 'plot': plot})
             except:
                 pass
         self.endDirectory('movies')
