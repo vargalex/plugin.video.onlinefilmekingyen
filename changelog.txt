@@ -1,4 +1,6 @@
-﻿[B]1.0.17[/B]
+﻿[B]1.0.18[/B]
+- String encoding BugFix
+[B]1.0.17[/B]
 - BugFix
 [B]1.0.16[/B]
 - Forrás változás követése

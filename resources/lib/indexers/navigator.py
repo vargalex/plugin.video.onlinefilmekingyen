@@ -188,7 +188,7 @@ class navigator:
             meta = client.parseDOM(details, 'div', attrs={'class': 'meta'})[0]
             year = py2_encode(client.parseDOM(meta, 'span', attrs={'class': 'year'})[0])
             contenido = client.parseDOM(details, 'div', attrs={'class': 'contenido'})
-            plot = py2_encode(client.parseDOM(contenido, 'p')[0]).replace(deleteFromPlot, "")
+            plot = client.parseDOM(contenido, 'p')[0].replace(deleteFromPlot, "")
             plot = client.replaceHTMLCodes(plot.split("<")[0])
             sorozatStr = ""
             if "tvshows" in movieurl:
